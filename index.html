@@ -10,99 +10,94 @@ html, body {
   margin: 0;
   height: 100%;
   overflow: hidden;
-  background: #05070c;
+  background: #191919;
   font-family: Arial, sans-serif;
 }
 
-/* ===== MONDAY ALERT PANEL ===== */
+/* ===== MONDAY ALERT ===== */
 #alert {
   display: none;
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at center, #1a2a3a 0%, #05070c 70%);
+  background: #191919;
   align-items: center;
   justify-content: center;
   text-align: center;
-  flex-direction: column;
-  color: white;
 }
 
-/* glowing frame */
 #alertBox {
-  padding: 40px 60px;
-  border: 2px solid rgba(255,255,255,0.2);
-  border-radius: 20px;
+  padding: 25px 35px; /* smaller = more compact */
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 14px;
   box-shadow:
-    0 0 40px rgba(120,180,255,0.2),
-    inset 0 0 30px rgba(255,255,255,0.05);
-  animation: pulse 2s infinite;
-  backdrop-filter: blur(6px);
+    0 0 25px rgba(120,180,255,0.15),
+    inset 0 0 20px rgba(255,255,255,0.05);
+  animation: pulse 2.5s infinite;
+  max-width: 80%;
 }
 
-/* main alert text */
 #alertText {
-  font-size: 5vw;
+  font-size: 3.2vw; /* reduced for Notion box */
   font-weight: 900;
+  color: white;
   letter-spacing: 0.05em;
-  text-shadow: 0 0 25px rgba(255,255,255,0.3);
 }
 
-/* subtitle */
 #alertSub {
-  margin-top: 15px;
-  font-size: 1.5vw;
-  opacity: 0.7;
-  letter-spacing: 0.3em;
+  margin-top: 10px;
+  font-size: 1.2vw;
+  opacity: 0.6;
+  letter-spacing: 0.25em;
+  color: #cfe7ff;
 }
 
-/* pulse animation */
-@keyframes pulse {
-  0% { transform: scale(1); box-shadow: 0 0 40px rgba(120,180,255,0.2), inset 0 0 30px rgba(255,255,255,0.05); }
-  50% { transform: scale(1.03); box-shadow: 0 0 70px rgba(120,180,255,0.35), inset 0 0 40px rgba(255,255,255,0.08); }
-  100% { transform: scale(1); box-shadow: 0 0 40px rgba(120,180,255,0.2), inset 0 0 30px rgba(255,255,255,0.05); }
-}
-
-/* ===== NON-MONDAY OMINOUS ===== */
+/* ===== OMINOUS MODE ===== */
 #ominous {
   display: none;
   position: absolute;
   width: 100%;
   text-align: center;
   top: 45%;
-  font-size: 6vw;
-  color: #b9d8ff;
-  letter-spacing: 0.5em;
-  opacity: 0.7;
+  font-size: 4vw; /* smaller for Notion embed */
+  color: #cfe7ff;
+  letter-spacing: 0.35em;
+  opacity: 0.65;
 }
 
-/* SNOW */
+/* ===== SNOW ===== */
 .snowflake {
   position: absolute;
   top: -10px;
   color: white;
   pointer-events: none;
+  opacity: 0.8;
   animation: fall linear forwards;
 }
 
+/* animations */
 @keyframes fall {
-  to {
-    transform: translateY(110vh);
-  }
+  to { transform: translateY(110vh); }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); box-shadow: 0 0 25px rgba(120,180,255,0.15), inset 0 0 20px rgba(255,255,255,0.05); }
+  50% { transform: scale(1.02); box-shadow: 0 0 40px rgba(120,180,255,0.25), inset 0 0 30px rgba(255,255,255,0.08); }
+  100% { transform: scale(1); box-shadow: 0 0 25px rgba(120,180,255,0.15), inset 0 0 20px rgba(255,255,255,0.05); }
 }
 </style>
 </head>
 
 <body>
 
-<!-- MONDAY ALERT -->
+<!-- MONDAY -->
 <div id="alert">
   <div id="alertBox">
     <div id="alertText">IT'S D&D DAY, MOTHER HUBBARDS</div>
-    <div id="alertSub">SEVERE WEATHER WARNING ALERT</div>
+    <div id="alertSub">SEVERE WEATHER WARNING - BEWARE OF SNOW</div>
   </div>
 </div>
 
-<!-- NON-MONDAY -->
+<!-- OTHER DAYS -->
 <div id="ominous">soon...</div>
 
 <script>
@@ -117,7 +112,7 @@ function spawnSnow() {
   s.innerHTML = Math.random() > 0.8 ? "❄" : "·";
 
   s.style.left = Math.random() * 100 + "vw";
-  s.style.fontSize = (8 + Math.random() * 18) + "px";
+  s.style.fontSize = (6 + Math.random() * 14) + "px";
   s.style.animationDuration = (3 + Math.random() * 5) + "s";
 
   document.body.appendChild(s);
@@ -125,13 +120,11 @@ function spawnSnow() {
   setTimeout(() => s.remove(), 8000);
 }
 
-if (day === 1) {
-  // MONDAY = FULL ALERT MODE
+if (day === 2) {
   alert.style.display = "flex";
 } else {
-  // NON-MONDAY = OMINOUS + SNOW
   ominous.style.display = "block";
-  setInterval(spawnSnow, 80);
+  setInterval(spawnSnow, 90);
 }
 </script>
 
