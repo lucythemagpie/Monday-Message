@@ -1,53 +1,139 @@
-<body>
-
-<div id="message">It's D&D day mother hubbards!</div>
-
-<img id="snow" src="https://images.unsplash.com/photo-1516431883659-655d41c09bf9?auto=format&fit=crop&w=1600&q=80" />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>D&D Day System</title>
 
 <style>
-  body {
-    margin: 0;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    background: #191919;
-  }
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: #05070c;
+  font-family: Arial, sans-serif;
+}
 
-  #message {
-    display: none;
-    font-size: 8vw;
-    font-weight: 900;
-    color: white;
-    font-family: Arial, sans-serif;
-    text-align: center;
-    z-index: 2;
-  }
+/* ===== MONDAY ALERT PANEL ===== */
+#alert {
+  display: none;
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, #1a2a3a 0%, #05070c 70%);
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  flex-direction: column;
+  color: white;
+}
 
-  #snow {
-    display: none;
-    width: 100vw;
-    height: 100vh;
-    object-fit: cover;
-    position: absolute;
-    top: 0;
-    left: 0;
-    opacity: 0.9;
+/* glowing frame */
+#alertBox {
+  padding: 40px 60px;
+  border: 2px solid rgba(255,255,255,0.2);
+  border-radius: 20px;
+  box-shadow:
+    0 0 40px rgba(120,180,255,0.2),
+    inset 0 0 30px rgba(255,255,255,0.05);
+  animation: pulse 2s infinite;
+  backdrop-filter: blur(6px);
+}
+
+/* main alert text */
+#alertText {
+  font-size: 5vw;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 25px rgba(255,255,255,0.3);
+}
+
+/* subtitle */
+#alertSub {
+  margin-top: 15px;
+  font-size: 1.5vw;
+  opacity: 0.7;
+  letter-spacing: 0.3em;
+}
+
+/* pulse animation */
+@keyframes pulse {
+  0% { transform: scale(1); box-shadow: 0 0 40px rgba(120,180,255,0.2), inset 0 0 30px rgba(255,255,255,0.05); }
+  50% { transform: scale(1.03); box-shadow: 0 0 70px rgba(120,180,255,0.35), inset 0 0 40px rgba(255,255,255,0.08); }
+  100% { transform: scale(1); box-shadow: 0 0 40px rgba(120,180,255,0.2), inset 0 0 30px rgba(255,255,255,0.05); }
+}
+
+/* ===== NON-MONDAY OMINOUS ===== */
+#ominous {
+  display: none;
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  top: 45%;
+  font-size: 6vw;
+  color: #b9d8ff;
+  letter-spacing: 0.5em;
+  opacity: 0.7;
+}
+
+/* SNOW */
+.snowflake {
+  position: absolute;
+  top: -10px;
+  color: white;
+  pointer-events: none;
+  animation: fall linear forwards;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(110vh);
   }
+}
 </style>
+</head>
+
+<body>
+
+<!-- MONDAY ALERT -->
+<div id="alert">
+  <div id="alertBox">
+    <div id="alertText">IT'S D&D DAY, MOTHER HUBBARDS</div>
+    <div id="alertSub">SEVERE WEATHER WARNING ALERT</div>
+  </div>
+</div>
+
+<!-- NON-MONDAY -->
+<div id="ominous">soon...</div>
 
 <script>
-  const today = new Date().getDay(); // Monday = 1
+const day = new Date().getDay();
 
-  const message = document.getElementById("message");
-  const snow = document.getElementById("snow");
+const alert = document.getElementById("alert");
+const ominous = document.getElementById("ominous");
 
-  if (today === 1) {
-    message.style.display = "block";
-  } else {
-    snow.style.display = "block";
-  }
+function spawnSnow() {
+  const s = document.createElement("div");
+  s.className = "snowflake";
+  s.innerHTML = Math.random() > 0.8 ? "❄" : "·";
+
+  s.style.left = Math.random() * 100 + "vw";
+  s.style.fontSize = (8 + Math.random() * 18) + "px";
+  s.style.animationDuration = (3 + Math.random() * 5) + "s";
+
+  document.body.appendChild(s);
+
+  setTimeout(() => s.remove(), 8000);
+}
+
+if (day === 1) {
+  // MONDAY = FULL ALERT MODE
+  alert.style.display = "flex";
+} else {
+  // NON-MONDAY = OMINOUS + SNOW
+  ominous.style.display = "block";
+  setInterval(spawnSnow, 80);
+}
 </script>
 
 </body>
+</html>
