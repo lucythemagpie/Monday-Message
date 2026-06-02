@@ -1,41 +1,53 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>D&D Day</title>
+<body>
+
+<div id="message">It's D&D day mother hubbards!</div>
+
+<img id="snow" src="https://images.unsplash.com/photo-1516431883659-655d41c09bf9?auto=format&fit=crop&w=1600&q=80" />
 
 <style>
   body {
     margin: 0;
-    background: transparent;
     height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
+    background: #191919;
   }
 
   #message {
     display: none;
     font-size: 8vw;
     font-weight: 900;
-    color: black;
+    color: white;
     font-family: Arial, sans-serif;
     text-align: center;
+    z-index: 2;
+  }
+
+  #snow {
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0.9;
   }
 </style>
-</head>
-
-<body>
-
-<div id="message">It's D&D day mother hubbards!</div>
 
 <script>
   const today = new Date().getDay(); // Monday = 1
-  if (today === 2) {
-    document.getElementById("message").style.display = "block";
+
+  const message = document.getElementById("message");
+  const snow = document.getElementById("snow");
+
+  if (today === 1) {
+    message.style.display = "block";
+  } else {
+    snow.style.display = "block";
   }
 </script>
 
 </body>
-</html>
