@@ -3,128 +3,134 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>D&D Day System</title>
+<title>D&D System</title>
 
 <style>
 html, body {
   margin: 0;
   height: 100%;
   overflow: hidden;
-  background: #191919;
   font-family: Arial, sans-serif;
+  background: #191919;
 }
 
-/* ===== MONDAY ALERT ===== */
-#alert {
+/* LAYOUT */
+.view {
   display: none;
   position: absolute;
   inset: 0;
-  background: #191919;
   align-items: center;
   justify-content: center;
   text-align: center;
 }
 
-#alertBox {
-  padding: 25px 35px; /* smaller = more compact */
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 14px;
-  box-shadow:
-    0 0 25px rgba(120,180,255,0.15),
-    inset 0 0 20px rgba(255,255,255,0.05);
-  animation: pulse 2.5s infinite;
-  max-width: 80%;
-}
-
-#alertText {
-  font-size: 3.2vw; /* reduced for Notion box */
+/* TEXT */
+#message {
+  font-size: 7vw;
   font-weight: 900;
   color: white;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.1em;
 }
 
-#alertSub {
-  margin-top: 10px;
-  font-size: 1.2vw;
-  opacity: 0.6;
-  letter-spacing: 0.25em;
-  color: #cfe7ff;
-}
-
-/* ===== OMINOUS MODE ===== */
 #ominous {
-  display: none;
-  position: absolute;
-  width: 100%;
-  text-align: center;
-  top: 45%;
-  font-size: 4vw; /* smaller for Notion embed */
+  font-size: 5vw;
   color: #cfe7ff;
-  letter-spacing: 0.35em;
-  opacity: 0.65;
+  letter-spacing: 0.5em;
+  opacity: 0.7;
 }
 
-/* ===== SNOW ===== */
+/* MONDAY GLOW + PULSE */
+.mondayText {
+  animation: pulseGlow 2.5s infinite;
+  text-shadow:
+    0 0 10px rgba(120,180,255,0.6),
+    0 0 25px rgba(120,180,255,0.4),
+    0 0 45px rgba(120,180,255,0.2);
+}
+
+@keyframes pulseGlow {
+  0%,100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.03);
+    filter: brightness(1.3);
+  }
+}
+
+/* SNOW */
 .snowflake {
   position: absolute;
   top: -10px;
   color: white;
   pointer-events: none;
-  opacity: 0.8;
   animation: fall linear forwards;
+  text-shadow: 0 0 6px rgba(180,220,255,0.8);
 }
 
-/* animations */
 @keyframes fall {
   to { transform: translateY(110vh); }
-}
-
-@keyframes pulse {
-  0% { transform: scale(1); box-shadow: 0 0 25px rgba(120,180,255,0.15), inset 0 0 20px rgba(255,255,255,0.05); }
-  50% { transform: scale(1.02); box-shadow: 0 0 40px rgba(120,180,255,0.25), inset 0 0 30px rgba(255,255,255,0.08); }
-  100% { transform: scale(1); box-shadow: 0 0 25px rgba(120,180,255,0.15), inset 0 0 20px rgba(255,255,255,0.05); }
 }
 </style>
 </head>
 
 <body>
 
-<!-- MONDAY -->
-<div id="alert">
-  <div id="alertBox">
-    <div id="alertText">IT'S D&D DAY, MOTHER HUBBARDS</div>
-    <div id="alertSub">SEVERE WEATHER WARNING - BEWARE OF SNOW</div>
-  </div>
-</div>
-
-<!-- OTHER DAYS -->
-<div id="ominous">soon...</div>
+<div id="message" class="view">IT'S D&D DAY, MOTHER HUBBARDS</div>
+<div id="ominous" class="view">soon...</div>
 
 <script>
 const day = new Date().getDay();
 
-const alert = document.getElementById("alert");
+const message = document.getElementById("message");
 const ominous = document.getElementById("ominous");
 
-function spawnSnow() {
+function spawnSnow(isHeavy) {
   const s = document.createElement("div");
   s.className = "snowflake";
-  s.innerHTML = Math.random() > 0.8 ? "❄" : "·";
+
+  // always SOME snowflake, sometimes chunky ❄
+  const heavyFlake = Math.random() < (isHeavy ? 0.6 : 0.25);
+  s.innerHTML = heavyFlake ? "❄" : "·";
 
   s.style.left = Math.random() * 100 + "vw";
-  s.style.fontSize = (6 + Math.random() * 14) + "px";
-  s.style.animationDuration = (3 + Math.random() * 5) + "s";
+
+  const size = isHeavy
+    ? (10 + Math.random() * 26)
+    : (6 + Math.random() * 16);
+
+  s.style.fontSize = size + "px";
+
+  const speed = isHeavy
+    ? (1.2 + Math.random() * 2.5)   // FAST BLIZZARD
+    : (2.5 + Math.random() * 5);    // light snow
+
+  s.style.animationDuration = speed + "s";
+  s.style.opacity = Math.random();
 
   document.body.appendChild(s);
-
-  setTimeout(() => s.remove(), 8000);
+  setTimeout(() => s.remove(), 9000);
 }
 
+/* reset */
+message.style.display = "none";
+ominous.style.display = "none";
+
+let snowInterval;
+
 if (day === 2) {
-  alert.style.display = "flex";
+  message.style.display = "flex";
+  message.classList.add("mondayText");
+
+  // FAST BLIZZARD
+  snowInterval = setInterval(() => spawnSnow(true), 18);
+
 } else {
-  ominous.style.display = "block";
-  setInterval(spawnSnow, 90);
+  ominous.style.display = "flex";
+
+  // still snowing, just calmer
+  snowInterval = setInterval(() => spawnSnow(false), 70);
 }
 </script>
 
